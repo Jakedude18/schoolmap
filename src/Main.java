@@ -71,7 +71,6 @@ public class Main {
             Iterator<Path> itr = nextPlaces.iterator();
             Path currentLowestPath = itr.next();
             List<Path> currentLowest;
-            do (i++) while (true);
             try{
                 currentLowest = dynamicBestPath(currentLowestPath.otherPoint(startingPosition), notAllowedPoints);
 
