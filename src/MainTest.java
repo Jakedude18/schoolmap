@@ -4,46 +4,58 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.lang.Integer;
 
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+
+
 public class MainTest {
-    private void addPath(HashMap map, HashSet set, String point1, String point2, Integer Distance){
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    private void addPath(HashMap map,String point1, String point2, Integer Distance){
         Path addedPath = new Path(point1, point2);
         map.put(addedPath,Distance);
-        set.add(addedPath);
     }
     @Test
-    public void twoPoints()  throws BothPointsAreTheNotPointException, NonHamiltonianTourPointsException {
-        HashSet<Path> paths = new HashSet<>();
+    public void twoPoints()  throws NonHamiltonianTourPointsException {
         HashMap<Path,Integer> map = new HashMap<>();
-        addPath(map,paths,"1","2",10);
-        Main TSP = new Main(paths,map);
+        addPath(map, "1","2",10);
+        Main TSP = new Main(map);
         TSP.displayInfo();
         System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
     @Test
-    public void fourHamiltonianTourPoints()  throws BothPointsAreTheNotPointException, NonHamiltonianTourPointsException {
-        HashSet<Path> paths = new HashSet<>();
+    public void fourHamiltonianTourPoints()  throws NonHamiltonianTourPointsException {
         HashMap<Path,Integer> map = new HashMap<>();
-        addPath(map,paths,"1","2",10);
-        addPath(map,paths,"1","3",15);
-        addPath(map,paths,"1","4",20);
-        addPath(map,paths,"2","3",35);
-        addPath(map,paths,"2","4",25);
-        addPath(map,paths,"3","4",30);
-        Main TSP = new Main(paths,map);
-        TSP.displayInfo();
+        addPath(map, "1","2",10);
+        addPath(map, "1","3",15);
+        addPath(map, "1","4",20);
+        addPath(map, "2","3",35);
+        addPath(map, "2","4",25);
+        addPath(map, "3","4",30);
+        Main TSP = new Main(map);
+        //System.out.println(TSP.easyToReadListPath(TSP.dynamicBestPath("2", new HashSet<>()),"2"));
         System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
     @Test
-    public void fourNonHamiltonianTourPoints()  throws BothPointsAreTheNotPointException, NonHamiltonianTourPointsException {
-        HashSet<Path> paths = new HashSet<>();
+    public void fourNonHamiltonianTourPoints()  throws NonHamiltonianTourPointsException {
         HashMap<Path,Integer> map = new HashMap<>();
-        addPath(map,paths,"1","2",10);
-        addPath(map,paths,"1","3",15);
-        addPath(map,paths,"1","4",20);
-        addPath(map,paths,"2","3",35);
-        addPath(map,paths,"2","4",25);
-        Main TSP = new Main(paths,map);
-        TSP.displayInfo();
-        System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
+        addPath(map, "1","2",10);
+        addPath(map, "1","3",15);
+        addPath(map, "1","4",20);
+        addPath(map, "2","3",35);
+        addPath(map, "2","4",25);
+        Main TSP = new Main(map);
+        expectedException.expect(NonHamiltonianTourPointsException.class);
+        TSP.bestPathStartingAnywhere();
+    }
+    @Test
+    public void LTHSMap() throws NonHamiltonianTourPointsException{
+        HashSet<String> schedule = new HashSet<>();
+        //schedule.add("B401");
+        schedule.add("E207");
+        schedule.add("C207");
+        schedule.add("K207");
+        System.out.println(SchoolDataSets.LTHS.getSchoolData().bestPath(schedule));
     }
 }

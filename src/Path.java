@@ -15,13 +15,13 @@ public class Path {
         }
         System.out.println(message);
     }
-    String otherPoint(String notPoint) throws BothPointsAreTheNotPointException{
+    String otherPoint(String notPoint) {
         for(String point: points){
             if(!point.equals(notPoint)){
                 return point;
             }
         }
-        throw new BothPointsAreTheNotPointException("Both of the points in this path are the same, kinda of a sucky path)");
+        return null;
     }
     HashSet<String> getPoints(){
         return points;

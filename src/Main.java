@@ -5,9 +5,9 @@ public class Main {
     private HashSet<Path> allPaths;
     private HashMap<Path, Integer> map;
 
-    Main(HashSet paths, HashMap map) {
-        this.allPaths = paths;
+    Main(HashMap map) {
         this.map = map;
+        this.allPaths = new HashSet<Path>(map.keySet());
     }
 
     void displayInfo() {
@@ -19,7 +19,7 @@ public class Main {
     }
 
     //This function would be for if someone wanted to find the best possible path starting from any point on a map
-    List<String> bestPathStartingAnywhere() throws BothPointsAreTheNotPointException, NonHamiltonianTourPointsException {
+    List<String> bestPathStartingAnywhere() throws NonHamiltonianTourPointsException{
         HashSet<String> allStartingPoints = new HashSet<>();
         Iterator<Path> pathsItr = allPaths.iterator();
         while (pathsItr.hasNext()) {
@@ -29,7 +29,7 @@ public class Main {
         String currentLowestStartingPosition = startingPointsItr.next();
         List<Path> currentLowestPath = dynamicBestPath(currentLowestStartingPosition, new HashSet<>());
         while (startingPointsItr.hasNext()) {
-            String currentStartingPosition = (startingPointsItr.next());
+            String currentStartingPosition = startingPointsItr.next();
             List<Path> currentPath = dynamicBestPath(currentStartingPosition, new HashSet<>());
             if (pathListValue(currentPath) < pathListValue(currentLowestPath)) {
                 currentLowestPath = currentPath;
@@ -39,7 +39,7 @@ public class Main {
         return easyToReadListPath(currentLowestPath, currentLowestStartingPosition);
     }
 
-    List<String> easyToReadListPath(List<Path> paths, String startingPoint) throws BothPointsAreTheNotPointException {
+     List<String> easyToReadListPath(List<Path> paths, String startingPoint) {
         List<String> finalList = new ArrayList<>();
         finalList.add(startingPoint);
         Iterator<Path> itr = paths.iterator();
@@ -52,41 +52,30 @@ public class Main {
         return finalList;
     }
 
-    List<Path> dynamicBestPath(String startingPosition, HashSet<String> notAllowedPoints) throws BothPointsAreTheNotPointException, NonHamiltonianTourPointsException {
+     List<Path> dynamicBestPath(String startingPosition,  HashSet<String> notAllowedPoints) throws NonHamiltonianTourPointsException {
+        HashSet<String> alreadyUsedPoints =  new HashSet<>(notAllowedPoints);
         HashSet<Path> nextPlaces = possibleNextPlaces(startingPosition);
         Iterator<Path> removeItr = nextPlaces.iterator();
         while (removeItr.hasNext()) {
             Path currentPath = removeItr.next();
-            if (pathContainsStringInList(currentPath, notAllowedPoints)) removeItr.remove();
+            if (pathContainsStringInList(currentPath, alreadyUsedPoints)) removeItr.remove();
         }
         if (nextPlaces.size() == 0) {
-            throw new NonHamiltonianTourPointsException("This point has dose not lead to all the other points :" + startingPosition);
+            throw new NonHamiltonianTourPointsException(startingPosition);
         }
         if (nextPlaces.size() == 1) {
             List<Path> bestPath = new ArrayList<>();
             bestPath.add(nextPlaces.iterator().next());
             return bestPath;
         } else {
-            notAllowedPoints.add(startingPosition);
+            alreadyUsedPoints.add(startingPosition);
             Iterator<Path> itr = nextPlaces.iterator();
             Path currentLowestPath = itr.next();
-            List<Path> currentLowest;
-            try{
-                currentLowest = dynamicBestPath(currentLowestPath.otherPoint(startingPosition), notAllowedPoints);
-
-            }catch (NonHamiltonianTourPointsException ex){
-                currentLowestPath = itr.next(); //skips the invalid path
-                currentLowest = dynamicBestPath(currentLowestPath.otherPoint(startingPosition), notAllowedPoints);
-            }
+            List<Path> currentLowest = dynamicBestPath(currentLowestPath.otherPoint(startingPosition), alreadyUsedPoints);
             currentLowest.add(0, currentLowestPath);
             while (itr.hasNext()) {
                 Path currentPath = itr.next();
-                List<Path> currentList;
-                try {
-                    currentList = dynamicBestPath(currentPath.otherPoint(startingPosition), notAllowedPoints);
-                }catch (NonHamiltonianTourPointsException ex){
-                    break;
-                }
+                List<Path> currentList = dynamicBestPath(currentPath.otherPoint(startingPosition), alreadyUsedPoints);
                 currentList.add(0, currentPath);
                 if (pathListValue(currentList) < pathListValue(currentLowest)) currentLowest = currentList;
             }
@@ -101,10 +90,10 @@ public class Main {
         return false;
     }
 
-    private int pathListValue(List<Path> paths) {
+     private int pathListValue(List<Path> paths) {
         int value = 0;
         for (Path path : paths) {
-            value = +map.get(path);
+            value += map.get(path);
         }
         return value;
     }
