@@ -1,4 +1,5 @@
-import java.lang.reflect.Method;
+package tsp;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,7 @@ public class SchoolData {
         this.map = map;
     }
     List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException{
-        return zonesToSchedule(new Main(updateMap(scheduleToZones(schedule))).bestPathStartingAnywhere(),schedule);
+        return zonesToSchedule(new Solver(updateMap(scheduleToZones(schedule))).bestPathStartingAnywhere(),schedule);
     }
 
     private HashSet<String> scheduleToZones(HashSet<String> schedule) {

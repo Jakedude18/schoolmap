@@ -1,3 +1,5 @@
+package tsp;
+
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -8,7 +10,7 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 
-public class MainTest {
+public class SolverTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -20,7 +22,7 @@ public class MainTest {
     public void twoPoints()  throws NonHamiltonianTourPointsException {
         HashMap<Path,Integer> map = new HashMap<>();
         addPath(map, "1","2",10);
-        Main TSP = new Main(map);
+        Solver TSP = new Solver(map);
         TSP.displayInfo();
         System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
@@ -33,7 +35,7 @@ public class MainTest {
         addPath(map, "2","3",35);
         addPath(map, "2","4",25);
         addPath(map, "3","4",30);
-        Main TSP = new Main(map);
+        Solver TSP = new Solver(map);
         //System.out.println(TSP.easyToReadListPath(TSP.dynamicBestPath("2", new HashSet<>()),"2"));
         System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
@@ -45,7 +47,7 @@ public class MainTest {
         addPath(map, "1","4",20);
         addPath(map, "2","3",35);
         addPath(map, "2","4",25);
-        Main TSP = new Main(map);
+        Solver TSP = new Solver(map);
         expectedException.expect(NonHamiltonianTourPointsException.class);
         TSP.bestPathStartingAnywhere();
     }
