@@ -36,7 +36,6 @@ public class SolverTest {
         addPath(map, "2","4",25);
         addPath(map, "3","4",30);
         Solver TSP = new Solver(map);
-        //System.out.println(TSP.easyToReadListPath(TSP.dynamicBestPath("2", new HashSet<>()),"2"));
         System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
     @Test
@@ -51,7 +50,7 @@ public class SolverTest {
         expectedException.expect(NonHamiltonianTourPointsException.class);
         TSP.bestPathStartingAnywhere();
     }
-    @Test
+    /*@Test
     public void LTHSMap() throws NonHamiltonianTourPointsException{
         HashSet<String> schedule = new HashSet<>();
         //schedule.add("B401");
@@ -59,5 +58,5 @@ public class SolverTest {
         schedule.add("C207");
         schedule.add("K207");
         System.out.println(SchoolDataSets.LTHS.getSchoolData().bestPath(schedule));
-    }
+    }*/
 }

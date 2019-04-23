@@ -1,13 +1,14 @@
 package tsp;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class Hallway {
     private String name;
-    private List<String> rooms;
+    private HashSet<String> rooms;
     private int distance;
 
-    Hallway(String name,List<String> rooms, int distance){
+    Hallway(String name,HashSet<String> rooms, int distance){
         this.name = name;
         this.rooms = rooms;
         this.distance = distance;
@@ -15,5 +16,9 @@ public class Hallway {
 
     int getDistance(){
         return distance;
+    }
+
+    HashSet<String> getRooms(){
+        return rooms;
     }
 }

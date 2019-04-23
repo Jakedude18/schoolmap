@@ -1,18 +1,41 @@
 package tsp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class SchoolData {
-    private HashMap<Path,Integer> map;
-    SchoolData(HashMap map){
-        this.map = map;
+    private HashMap(Map.get)
+    SchoolData(HashSet<Path> paths,HashSet<Hallway> halls){
+        this.halls = halls;
+        this.paths = paths;
     }
-    List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException{
-        return zonesToSchedule(new Solver(updateMap(scheduleToZones(schedule))).bestPathStartingAnywhere(),schedule);
+    List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException {
+        Solver solver = new Solver(updateMap(scheduleToZones(schedule)));
+        //generate map
+        HashMap<Path,Integer>();
+        HashSet<Hallway> scheduleHallways = schedlueToHallways(schedule);
+        Iterator<Hallway> mainItr = scheduleHallways.iterator();
+        while (mainItr.hasNext()) {
+            Iterator<Hallway> itr = scheduleHallways.iterator();
+            itr.remove();
+            while (itr.hasNext()) {
+                solver.pointToPointPath();
+            }
+            scheduleHallways.remove(hallway);
+        }
+        return zonesToSchedule(solver.bestPathStartingAnywhere(), schedule);
     }
+    HashSet<Hallway> schedlueToHallways(HashSet<String> schedule){
+        HashSet<Hallway> scheduleHalls = new HashSet<>();
+        for(String room: schedule){
+            Iterator<Hallway> itr = halls.iterator();
+            Hallway currentRoom = itr.next();
+            while(itr.hasNext()){
+                if(currentRoom.getRooms().contains(room)) scheduleHalls.add(currentRoom);
+            }
+            halls.remove(currentRoom);
+        }
+    }
+
 
     private HashSet<String> scheduleToZones(HashSet<String> schedule) {
         HashSet<String> Zones = new HashSet<>();
@@ -36,8 +59,8 @@ public class SchoolData {
     }
     private HashMap updateMap(HashSet<String> schedule){
         HashMap<Path,Integer> updatedMap = new HashMap<>();
-        for(Path path:new HashSet<>(map.keySet())){
-            if(schedule.containsAll(path.getPoints())) updatedMap.put(path, map.get(path));
+        for(Path path:new HashSet<>(paths.keySet())){
+            if(schedule.containsAll(path.getPoints())) updatedMap.put(path, paths.get(path));
         }
         return updatedMap;
     }

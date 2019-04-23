@@ -9,7 +9,7 @@ public class PathFinder {
         for (String room : rooms){
             schedule.add(room);
         }
-        List bestPath = SchoolDataSets.LTHS.getSchoolData().bestPath(schedule);
-        System.out.printf("Best path is as follows %s%n", bestPath.toString());
+        //List bestPath = SchoolDataSets.LTHS.getSchoolData().bestPath(schedule);
+       // System.out.printf("Best path is as follows %s%n", bestPath.toString());
     }
 }
