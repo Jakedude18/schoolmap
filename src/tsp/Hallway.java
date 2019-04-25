@@ -21,4 +21,6 @@ public class Hallway {
     HashSet<String> getRooms(){
         return rooms;
     }
+
+    String getName(){return name}
 }

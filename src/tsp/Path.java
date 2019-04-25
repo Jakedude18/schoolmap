@@ -33,10 +33,10 @@ public class Path<T> {
         return null;
     }
     public HashSet<T> getPoints() {
-        HashSet<T> stringPoints = new HashSet<>();
-        for (Object obj : points) {
-            stringPoints.add((T) obj);
+        HashSet<T> points = new HashSet<>();
+        for (Object obj : this.points) {
+            points.add((T) obj);
         }
-        return stringPoints;
+        return points;
     }
 }

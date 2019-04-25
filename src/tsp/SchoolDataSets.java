@@ -6,7 +6,7 @@ import java.util.EnumSet;
 
 public enum SchoolDataSets {
 
-        LTHS(new SchoolData(LTHSdata(),new HashSet(EnumSet.allOf(LTHSHalls.class))));
+        LTHS(new SchoolData(LTHSdata()));
 
         private SchoolData schoolData;
         enum LTHSHalls{
@@ -33,14 +33,17 @@ public enum SchoolDataSets {
         }
 
 
-        private static HashSet<Path> LTHSdata(){
-            HashSet<Path> LTHSdata = new HashSet<>();
-            addPath(LTHSdata,LTHSHalls.BHALL.getHallway(),LTHSHalls.CHALL.getHallway());
-            addPath(LTHSdata,LTHSHalls.BHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
-            addPath(LTHSdata,LTHSHalls.CHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
-            addPath(LTHSdata,LTHSHalls.LSHALL.getHallway(),LTHSHalls.KHALL.getHallway());
+        private static HashMap<Path, Integer> LTHSdata(){
 
-            return LTHSdata;
+            HashSet<Path> LTHS_HALL_PATHS = new HashSet<>();
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.CHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.CHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.LSHALL.getHallway(),LTHSHalls.KHALL.getHallway());
+            Solver solver = new Solver(LTHS_HALL_PATHS);
+            //generate map
+            HashSet<Hallway> scheduleHallways = new HashSet(EnumSet.allOf(LTHSHalls.class));
+            return solver.generateMapUsingHalls();
 
         }
         private static <E> void addPath(HashMap map, E point1, E point2, Integer Distance){
@@ -53,5 +56,6 @@ public enum SchoolDataSets {
         SchoolData getSchoolData(){
             return this.schoolData;
         }
+
     }
 

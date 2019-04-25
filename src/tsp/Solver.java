@@ -11,6 +11,9 @@ public class Solver {
         this.map = map;
         this.allPaths = new HashSet<Path>(map.keySet());
     }
+    public Solver(HashSet<Path> paths){
+        this.allPaths = paths;
+    }
 
 
     void displayInfo() {
@@ -21,6 +24,19 @@ public class Solver {
         System.out.println("This is the map: " + map);
     }
 
+    HashMap<Path, Integer> generateMapUsingHalls(){
+        HashMap<Path, Integer> TSPmap = new HashMap<>();
+        Iterator<Hallway> itr;
+        Hallway firstHall;
+        Hallway secondHall;
+        for(Path path: allPaths){
+            itr = path.getPoints().iterator();
+            firstHall = itr.next();
+            secondHall = itr.next();
+            TSPmap.put(new Path(firstHall,secondHall),pathListValue(hallToHallPath(firstHall,secondHall,new HashSet<>()),firstHall));
+        }
+        return TSPmap;
+    }
     //This function would be for if someone wanted to find the best possible path starting from any point on a map
     List<String> bestPathStartingAnywhere() throws NonHamiltonianTourPointsException {
         HashSet<String> allStartingPoints = new HashSet<>();
@@ -56,7 +72,7 @@ public class Solver {
     }
     //calculates the paths between two points for two reasons. One, to show a student how get from where he is to his class.
     //Two, to calculate how far classes are from each other to crate a map for the method dynamicBestPath()
-    List<Path> pointToPointPath(Hallway startingPosition, Hallway endPosition, HashSet<Hallway> notAllowedPoints) {
+    List<Path> hallToHallPath(Hallway startingPosition, Hallway endPosition, HashSet<Hallway> notAllowedPoints) {
         HashSet<Hallway> alreadyUsedPoints = new HashSet<>(notAllowedPoints);
         HashSet<Path> nextPaths = possibleNextPlaces(startingPosition);
         Iterator<Path> removeItr = nextPaths.iterator();
@@ -79,11 +95,11 @@ public class Solver {
         alreadyUsedPoints.add(startingPosition);
         Iterator<Path> itr = nextPaths.iterator();
         Path currentLowestPath = itr.next();
-        List<Path> currentLowest = pointToPointPath(currentLowestPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
+        List<Path> currentLowest = hallToHallPath(currentLowestPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
         currentLowest.add(0, currentLowestPath);
         while (itr.hasNext()) {
             Path currentPath = itr.next();
-            List<Path> currentList = pointToPointPath(currentPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
+            List<Path> currentList = hallToHallPath(currentPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
             currentList.add(0, currentPath);
             if (pathListValue(currentList,startingPosition) < pathListValue(currentLowest,startingPosition)) currentLowest = currentList;
             }
@@ -151,10 +167,18 @@ public class Solver {
     }
 
 
-    private HashSet<Path> possibleNextPlaces(Object index) {
+    private HashSet<Path> possibleNextPlaces(String index) {
         HashSet<Path> possiblePaths = new HashSet<>();
         for (Path path : allPaths) {
             if (path.getPoints().contains(index)) possiblePaths.add(path);
+        }
+        return possiblePaths;
+    }
+
+    private HashSet<Path> possibleNextPlaces(Hallway index) {
+        HashSet<Path> possiblePaths = new HashSet<>();
+        for (Path path : allPaths) {
+            if(path.getPoints().contains(index)) possiblePaths.add(path);
         }
         return possiblePaths;
     }
