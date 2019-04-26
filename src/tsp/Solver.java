@@ -4,43 +4,49 @@ import java.util.*;
 import java.lang.Integer;
 
 public class Solver {
-    private HashSet<Path> allPaths;
+    private HashSet<Path> allHallPaths;
+    private HashSet<Hallway> allHalls;
     private HashMap<Path, Integer> map;
+    private HashSet<Path> allPaths;
     public Solver(){}
     public Solver(HashMap map) {
         this.map = map;
-        this.allPaths = new HashSet<Path>(map.keySet());
     }
-    public Solver(HashSet<Path> paths){
-        this.allPaths = paths;
+    public Solver(HashSet<Path> paths, HashSet<Hallway> halls){
+        this.allHallPaths = paths;
+        this.allHalls = halls;
     }
-
 
     void displayInfo() {
         System.out.println("this is the paths :");
-        for (Path path : allPaths) {
+        for (Path path : allHallPaths) {
             path.displayPath();
         }
         System.out.println("This is the map: " + map);
     }
 
-    HashMap<Path, Integer> generateMapUsingHalls(){
+    HashMap<Path, Integer> generateMapUsingHalls(List<String> roomSchedule) {
+        HashSet<Hallway> hallSchedule = new HashSet<>(scheduleToHallways(roomSchedule));
         HashMap<Path, Integer> TSPmap = new HashMap<>();
+        HashSet<Hallway> subSchedule = new HashSet(hallSchedule);
         Iterator<Hallway> itr;
-        Hallway firstHall;
         Hallway secondHall;
-        for(Path path: allPaths){
-            itr = path.getPoints().iterator();
-            firstHall = itr.next();
-            secondHall = itr.next();
-            TSPmap.put(new Path(firstHall,secondHall),pathListValue(hallToHallPath(firstHall,secondHall,new HashSet<>()),firstHall));
+        for (Hallway firstHall : hallSchedule) {
+            subSchedule.remove(firstHall);
+            itr = subSchedule.iterator();
+            while(itr.hasNext()){
+                secondHall = itr.next();
+                TSPmap.put(new Path(hallWayToRoom(roomSchedule,firstHall),hallWayToRoom(roomSchedule,secondHall)), pathListValue(hallToHallPath(firstHall, secondHall, new HashSet<>()), firstHall));
+            }
         }
         return TSPmap;
     }
     //This function would be for if someone wanted to find the best possible path starting from any point on a map
-    List<String> bestPathStartingAnywhere() throws NonHamiltonianTourPointsException {
+    List<String> bestPathStartingAnywhere(List<String> schedule) throws NonHamiltonianTourPointsException {
+        map = generateMapUsingHalls(schedule);
+        allPaths = new HashSet(map.keySet());
         HashSet<String> allStartingPoints = new HashSet<>();
-        Iterator<Path> pathsItr = allPaths.iterator();
+        Iterator<Path> pathsItr = map.keySet().iterator();
         while (pathsItr.hasNext()) {
             allStartingPoints.addAll(pathsItr.next().getPoints());
         }
@@ -81,9 +87,7 @@ public class Solver {
             if (pathContainsObjectInSet(currentPath, alreadyUsedPoints)) removeItr.remove();
         }
         if (nextPaths.size() == 0) {
-            List<Path> deadEnd = new ArrayList<>();
-            deadEnd.add(new Path("Dead","End"));
-            return deadEnd;
+            return null;
         }
         for(Path path: nextPaths){
             if(path.otherPoint(startingPosition).equals(endPosition)){
@@ -94,12 +98,32 @@ public class Solver {
         }
         alreadyUsedPoints.add(startingPosition);
         Iterator<Path> itr = nextPaths.iterator();
-        Path currentLowestPath = itr.next();
-        List<Path> currentLowest = hallToHallPath(currentLowestPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
+        Path currentLowestPath = null;
+        List<Path> currentLowest = null;
+        while(itr.hasNext()) {
+            currentLowestPath = itr.next();
+            currentLowest = hallToHallPath(currentLowestPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
+            if (currentLowest != null) {
+                break;
+            }
+        }
+        if(currentLowest == null){
+            return null;
+        }
         currentLowest.add(0, currentLowestPath);
         while (itr.hasNext()) {
-            Path currentPath = itr.next();
-            List<Path> currentList = hallToHallPath(currentPath.otherPoint(startingPosition),endPosition, alreadyUsedPoints);
+            Path currentPath = null;
+            List<Path> currentList = null;
+            while(itr.hasNext()) {
+                currentPath = itr.next();
+                currentList = hallToHallPath(currentPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
+                if (currentList != null) {
+                    break;
+                }
+            }
+            if(currentList == null){
+                return null;
+            }
             currentList.add(0, currentPath);
             if (pathListValue(currentList,startingPosition) < pathListValue(currentLowest,startingPosition)) currentLowest = currentList;
             }
@@ -177,10 +201,28 @@ public class Solver {
 
     private HashSet<Path> possibleNextPlaces(Hallway index) {
         HashSet<Path> possiblePaths = new HashSet<>();
-        for (Path path : allPaths) {
+        for (Path path : allHallPaths) {
             if(path.getPoints().contains(index)) possiblePaths.add(path);
         }
         return possiblePaths;
     }
 
+    private HashSet<Hallway> scheduleToHallways(List<String> schedule) {
+        HashSet<Hallway> halls = new HashSet<>();
+        for (String room : schedule) {
+            subLoop: for (Hallway hall : allHalls) {
+                    if (hall.getRooms().contains(room)) {
+                        halls.add(hall);
+                        break subLoop;
+                    }
+                }
+            }
+        return halls;
+    }
+    private String hallWayToRoom(List<String> schedule, Hallway hallway){
+        for(String room: schedule){
+            if(hallway.getRooms().contains(room)) return room;
+        }
+        return null;
+    }
 }

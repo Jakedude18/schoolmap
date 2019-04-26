@@ -22,5 +22,5 @@ public class Hallway {
         return rooms;
     }
 
-    String getName(){return name}
+    String getName(){return name;}
 }

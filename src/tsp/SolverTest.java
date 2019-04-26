@@ -2,8 +2,11 @@ package tsp;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
 import java.lang.Integer;
 
 import org.junit.Rule;
@@ -25,7 +28,7 @@ public class SolverTest {
         addPath(map, "1", "2", 10);
         Solver TSP = new Solver(map);
         TSP.displayInfo();
-        System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
+        //System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
 
     @Test
@@ -38,7 +41,7 @@ public class SolverTest {
         addPath(map, "2", "4", 25);
         addPath(map, "3", "4", 30);
         Solver TSP = new Solver(map);
-        System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
+        //System.out.println("The final path: " + TSP.bestPathStartingAnywhere());
     }
 
     @Test
@@ -51,12 +54,12 @@ public class SolverTest {
         addPath(map, "2", "4", 25);
         Solver TSP = new Solver(map);
         expectedException.expect(NonHamiltonianTourPointsException.class);
-        TSP.bestPathStartingAnywhere();
+        //TSP.bestPathStartingAnywhere();
     }
 
     @Test
     public void LTHSMap() throws NonHamiltonianTourPointsException {
-        HashSet<String> schedule = new HashSet<>();
+        List<String> schedule = new ArrayList<>();
         //schedule.add("B401");
         schedule.add("E207");
         schedule.add("C207");
@@ -65,8 +68,13 @@ public class SolverTest {
     }
 
     @Test
-    public void LTHSMapGenerate(){
-        HashSet<Path> testMap = new HashSet<>();
-        SchoolData LTHSdata = SchoolDataSets.LTHS.getSchoolData();
+    public void LTHSMapGenerate() throws NonHamiltonianTourPointsException{
+        List<String> schedule = new ArrayList<>();
+        schedule.add("B207");
+        schedule.add("K205");
+        schedule.add("D206");
+        List<String> finalList = SchoolDataSets.LTHS.getSchoolData().bestPath(schedule);
+        System.out.println(finalList);
+        System.out.println(SchoolDataSets.LTHS.getSchoolData().);
     }
 }
