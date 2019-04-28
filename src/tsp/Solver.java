@@ -1,7 +1,6 @@
 package tsp;
 
 import java.util.*;
-import java.lang.Integer;
 
 public class Solver {
     private HashSet<Path> allHallPaths;

@@ -47,6 +47,20 @@ public enum SchoolDataSets {
             addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.ARTHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.ARTHALL.getHallway(),LTHSHalls.M6.getHallway());
             //Anex Paths
+            addPath(LTHS_HALL_PATHS,LTHSHalls.M5.getHallway(),LTHSHalls.M6.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BREEZWAY.getHallway(),LTHSHalls.M6.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BREEZWAY.getHallway(),LTHSHalls.M5.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BREEZWAY.getHallway(),LTHSHalls.M3.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BREEZWAY.getHallway(),LTHSHalls.COURTYARD.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BREEZWAY.getHallway(),LTHSHalls.M2.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.M5.getHallway(),LTHSHalls.M2.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.M5.getHallway(),LTHSHalls.M3.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.M5.getHallway(),LTHSHalls.COURTYARD.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.COURTYARD.getHallway(),LTHSHalls.M2.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.COURTYARD.getHallway(),LTHSHalls.M4.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.COURTYARD.getHallway(),LTHSHalls.M3.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.M3.getHallway(),LTHSHalls.M4.getHallway());
+
             return LTHS_HALL_PATHS;
         }
 
@@ -91,10 +105,11 @@ public enum SchoolDataSets {
             //Anex Halls
             M6("Link", M6_HAll(),100),
             M5("Annex Gym Hall", M5_HAll(),50),
-            M4("Annex Science Hall", M5_HAll(),25),
-            M3("Breezeway M3 Hall", M5_HAll(),80),
+            M4("Annex Science Hall", M4_HAll(),25),
+            M3("Breezeway M3 Hall", M3_HAll(),80),
             M2("Annex History Hall", M2_HAll(),40),
-            COURTYARD("Courtyard", COURTYARD(),50);
+            COURTYARD("Courtyard", COURTYARD(),50),
+            BREEZWAY("Breezway", new HashSet<>(),30);
             private Hallway hallway;
 
             LTHSHalls(String name, HashSet<String> rooms, int distance){
@@ -264,7 +279,7 @@ public enum SchoolDataSets {
             private static HashSet<String> M6_HAll(){
                 HashSet<String> M6_ROOMS = new HashSet<>();
                 M6_ROOMS.add("M604");
-                M6_ROOMS.add("M602");
+                M6_ROOMS.add("M601");
                 return M6_ROOMS;
             }
 
