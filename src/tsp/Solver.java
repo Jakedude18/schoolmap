@@ -8,7 +8,7 @@ public class Solver {
     private HashSet<Hallway> allHalls;
     private HashMap<Path, Integer> map;
     private HashSet<Path> allPaths;
-    private Hallway deadEndHall = new Hallway("Dead_end",new HashSet<>(),500);
+    private Hallway deadEndHall = new Hallway("Dead_end",new HashSet<>(), Integer.MAX_VALUE);
     public Solver(HashMap map) {
         this.map = map;
     }
@@ -106,11 +106,14 @@ public class Solver {
             if (pathContainsObjectInSet(currentPath, alreadyUsedPoints)) removeItr.remove();
         }
         if (nextPaths.size() == 0) {
-            return null;
+            List<Path> deadEnd = new ArrayList<>();
+            deadEnd.add(new Path(startingPosition, deadEndHall));
+            return deadEnd;
+
         }
-        for(Path path: nextPaths){
+        for (Path path : nextPaths) {
             //checks to see if end hall is one of the next halls
-            if(path.otherPoint(startingPosition).equals(endPosition)){
+            if (path.otherPoint(startingPosition).equals(endPosition)) {
                 List<Path> bestPath = new ArrayList<>();
                 bestPath.add(path);
                 return bestPath;
@@ -118,37 +121,23 @@ public class Solver {
         }
         alreadyUsedPoints.add(startingPosition);
         Iterator<Path> itr = nextPaths.iterator();
-        Path currentLowestPath = null;
-        List<Path> currentLowest = null;
-        while(itr.hasNext()) {
-            currentLowestPath = itr.next();
-            currentLowest = hallToHallPath(currentLowestPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
-            if (currentLowest != null) {
-                break;
-            }
-        }
-        if(currentLowest == null){
-            return null;
-        }
+        Path currentLowestPath;
+        List<Path> currentLowest;
+        currentLowestPath = itr.next();
+        currentLowest = hallToHallPath(currentLowestPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
         currentLowest.add(0, currentLowestPath);
         while (itr.hasNext()) {
-            Path currentPath = null;
-            List<Path> currentList = null;
-            while(itr.hasNext()) {
-                currentPath = itr.next();
-                currentList = hallToHallPath(currentPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
-                if (currentList != null) {
-                    break;
-                }
-            }
-            if(currentList == null){
-                return null;
+            Path currentPath;
+            List<Path> currentList;
+            currentPath = itr.next();
+            currentList = hallToHallPath(currentPath.otherPoint(startingPosition), endPosition, alreadyUsedPoints);
+            if (pathListValue(currentList, startingPosition) < pathListValue(currentLowest, startingPosition)) {
+                currentLowest = currentList;
             }
             currentList.add(0, currentPath);
-            if (pathListValue(currentList,startingPosition) < pathListValue(currentLowest,startingPosition)) currentLowest = currentList;
-            }
-            return currentLowest;
         }
+        return currentLowest;
+    }
 
     private List<Path> dynamicBestPath(String startingPosition, HashSet<String> notAllowedPoints) throws NonHamiltonianTourPointsException {
         HashSet<String> alreadyUsedPoints = new HashSet<>(notAllowedPoints);
