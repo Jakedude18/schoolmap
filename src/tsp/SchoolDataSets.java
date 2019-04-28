@@ -1,6 +1,7 @@
 package tsp;
 
 import java.util.HashSet;
+import java.util.List;
 
 public enum SchoolDataSets {
 
@@ -15,7 +16,14 @@ public enum SchoolDataSets {
             HashSet<Path> LTHS_HALL_PATHS = new HashSet<>();
             addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.CHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.DHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.EHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.CHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.CHALL.getHallway(),LTHSHalls.EHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.CHALL.getHallway(),LTHSHalls.DHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.DHALL.getHallway(),LTHSHalls.EHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.DHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.EHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.LSHALL.getHallway(),LTHSHalls.KHALL.getHallway());
             //Solver solver = new Solver(LTHS_HALL_PATHS);
             //generate map
@@ -38,20 +46,26 @@ public enum SchoolDataSets {
             }
             return halls;
         }
-        private enum LTHSHalls{
+
+        List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException{
+            return this.schoolData.bestPathStartingAnywhere(schedule);
+        }
+
+    private enum LTHSHalls{
 
             BHALL("B hall", B_HAll(),20),
             CHALL("C hall", C_HAll(), 20),
             LSHALL("Main hall",new HashSet<>(),50),
-            KHALL("K Hall", K_HAll(), 20);
-
+            KHALL("K Hall", K_HAll(), 20),
+            DHALL("D Hall", D_HAll(), 30),
+            EHALL("E Hall", E_HAll(), 20);
             private Hallway hallway;
 
             LTHSHalls(String name, HashSet<String> rooms, int distance){
                 this.hallway = new Hallway(name, rooms, distance);
             }
 
-            static HashSet<String> B_HAll(){
+            private static HashSet<String> B_HAll(){
                 HashSet<String> B_ROOMS = new HashSet<>();
                 B_ROOMS.add("B114");
                 B_ROOMS.add("B113");
@@ -62,7 +76,7 @@ public enum SchoolDataSets {
                 return B_ROOMS;
             }
 
-            static HashSet<String> C_HAll(){
+            private static HashSet<String> C_HAll(){
                 HashSet<String> C_ROOMS = new HashSet<>();
                 C_ROOMS.add("C200");
                 C_ROOMS.add("C201");
@@ -85,7 +99,7 @@ public enum SchoolDataSets {
                 return C_ROOMS;
             }
 
-            static HashSet<String> K_HAll(){
+            private static HashSet<String> K_HAll(){
                 HashSet<String> K_ROOMS = new HashSet<>();
                 K_ROOMS.add("K100");
                 K_ROOMS.add("K101");
@@ -108,7 +122,30 @@ public enum SchoolDataSets {
                 K_ROOMS.add("K214");
                 return K_ROOMS;
             }
-
+            private static HashSet<String> E_HAll(){
+                HashSet<String> E_ROOMS = new HashSet<>();
+                E_ROOMS.add("E102");
+                E_ROOMS.add("E103");
+                E_ROOMS.add("E104");
+                E_ROOMS.add("E204");
+                E_ROOMS.add("E205");
+                E_ROOMS.add("E206");
+                E_ROOMS.add("E207");
+                return E_ROOMS;
+            }
+            private static HashSet<String> D_HAll(){
+                HashSet<String> D_ROOMS = new HashSet<>();
+                D_ROOMS.add("D102");
+                D_ROOMS.add("D103");
+                D_ROOMS.add("D104");
+                D_ROOMS.add("D105");
+                D_ROOMS.add("D202");
+                D_ROOMS.add("D203");
+                D_ROOMS.add("D204");
+                D_ROOMS.add("D205");
+                D_ROOMS.add("D206");
+                return D_ROOMS;
+            }
             Hallway getHallway(){
                 return this.hallway;
             }

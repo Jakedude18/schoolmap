@@ -59,22 +59,24 @@ public class SolverTest {
 
     @Test
     public void LTHSMap() throws NonHamiltonianTourPointsException {
-        List<String> schedule = new ArrayList<>();
+        HashSet<String> schedule = new HashSet();
         //schedule.add("B401");
         schedule.add("E207");
         schedule.add("C207");
         schedule.add("K207");
-        System.out.println(SchoolDataSets.LTHS.getSchoolData().bestPath(schedule));
+        System.out.println(SchoolDataSets.LTHS.bestPath(schedule));
     }
 
     @Test
     public void LTHSMapGenerate() throws NonHamiltonianTourPointsException{
-        List<String> schedule = new ArrayList<>();
+        HashSet<String> schedule = new HashSet();
         schedule.add("B207");
         schedule.add("K205");
+        schedule.add("C206");
+        schedule.add("E102");
         schedule.add("D206");
-        List<String> finalList = SchoolDataSets.LTHS.getSchoolData().bestPath(schedule);
-        System.out.println(finalList);
-        System.out.println(SchoolDataSets.LTHS.getSchoolData().);
+        List<String> finalList = SchoolDataSets.LTHS.bestPath(schedule);
+        //System.out.println(finalList);
+        System.out.println(SchoolDataSets.LTHS.getSchoolData().roomToRoomPath("B114","K107"));
     }
 }

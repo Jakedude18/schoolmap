@@ -8,7 +8,6 @@ public class Solver {
     private HashSet<Hallway> allHalls;
     private HashMap<Path, Integer> map;
     private HashSet<Path> allPaths;
-    public Solver(){}
     public Solver(HashMap map) {
         this.map = map;
     }
@@ -24,9 +23,16 @@ public class Solver {
         }
         System.out.println("This is the map: " + map);
     }
-
-    HashMap<Path, Integer> generateMapUsingHalls(List<String> roomSchedule) {
-        HashSet<Hallway> hallSchedule = new HashSet<>(scheduleToHallways(roomSchedule));
+    List<String> roomToRoomPath(String firstRoom,String secondRoom){
+        List<String> easyToReadPath = new ArrayList<>();
+        Hallway firtRoomHall = roomToHall(firstRoom);
+        for(Hallway hall: easyToReadListPath(hallToHallPath(firtRoomHall,roomToHall(secondRoom),new HashSet<>()),firtRoomHall)){
+            easyToReadPath.add(hall.getName());
+        }
+        return easyToReadPath;
+    }
+    private HashMap<Path, Integer> generateMapUsingHalls(HashSet<String> roomSchedule) {
+        HashSet<Hallway> hallSchedule = scheduleToHallways(roomSchedule);
         HashMap<Path, Integer> TSPmap = new HashMap<>();
         HashSet<Hallway> subSchedule = new HashSet(hallSchedule);
         Iterator<Hallway> itr;
@@ -42,7 +48,7 @@ public class Solver {
         return TSPmap;
     }
     //This function would be for if someone wanted to find the best possible path starting from any point on a map
-    List<String> bestPathStartingAnywhere(List<String> schedule) throws NonHamiltonianTourPointsException {
+    List<String> bestPathStartingAnywhere(HashSet<String> schedule) throws NonHamiltonianTourPointsException {
         map = generateMapUsingHalls(schedule);
         allPaths = new HashSet(map.keySet());
         HashSet<String> allStartingPoints = new HashSet<>();
@@ -64,7 +70,7 @@ public class Solver {
         return easyToReadListPath(currentLowestPath, currentLowestStartingPosition);
     }
 
-    List<String> easyToReadListPath(List<Path> paths, String startingPoint) {
+    private List<String> easyToReadListPath(List<Path> paths, String startingPoint) {
         List<String> finalList = new ArrayList<>();
         finalList.add(startingPoint);
         String currentPoint = startingPoint;
@@ -76,9 +82,21 @@ public class Solver {
         }
         return finalList;
     }
+    private List<Hallway> easyToReadListPath(List<Path> paths, Hallway startingPoint){
+        List<Hallway> finalList = new ArrayList<>();
+        finalList.add(startingPoint);
+        Hallway currentPoint = startingPoint;
+        Hallway nextPoint;
+            for (Path nextPath : paths) {
+                nextPoint = nextPath.otherPoint(currentPoint);
+                finalList.add(nextPoint);
+                currentPoint = nextPoint;
+            }
+        return finalList;
+    }
     //calculates the paths between two points for two reasons. One, to show a student how get from where he is to his class.
     //Two, to calculate how far classes are from each other to crate a map for the method dynamicBestPath()
-    List<Path> hallToHallPath(Hallway startingPosition, Hallway endPosition, HashSet<Hallway> notAllowedPoints) {
+    private List<Path> hallToHallPath(Hallway startingPosition, Hallway endPosition, HashSet<Hallway> notAllowedPoints) {
         HashSet<Hallway> alreadyUsedPoints = new HashSet<>(notAllowedPoints);
         HashSet<Path> nextPaths = possibleNextPlaces(startingPosition);
         Iterator<Path> removeItr = nextPaths.iterator();
@@ -90,6 +108,7 @@ public class Solver {
             return null;
         }
         for(Path path: nextPaths){
+            //checks to see if end hall is one of the next halls
             if(path.otherPoint(startingPosition).equals(endPosition)){
                 List<Path> bestPath = new ArrayList<>();
                 bestPath.add(path);
@@ -130,7 +149,7 @@ public class Solver {
             return currentLowest;
         }
 
-    List<Path> dynamicBestPath(String startingPosition, HashSet<String> notAllowedPoints) throws NonHamiltonianTourPointsException {
+    private List<Path> dynamicBestPath(String startingPosition, HashSet<String> notAllowedPoints) throws NonHamiltonianTourPointsException {
         HashSet<String> alreadyUsedPoints = new HashSet<>(notAllowedPoints);
         HashSet<Path> nextPlaces = possibleNextPlaces(startingPosition);
         Iterator<Path> removeItr = nextPlaces.iterator();
@@ -184,7 +203,7 @@ public class Solver {
         Hallway nextHall;
          for(Path nextPath: paths){
             nextHall = nextPath.otherPoint(currentHall);
-            value = nextHall.getDistance();
+            value += nextHall.getDistance();
             currentHall = nextHall;
         }
         return value;
@@ -207,19 +226,29 @@ public class Solver {
         return possiblePaths;
     }
 
-    private HashSet<Hallway> scheduleToHallways(List<String> schedule) {
+    private HashSet<Hallway> scheduleToHallways(HashSet<String> schedule) {
         HashSet<Hallway> halls = new HashSet<>();
         for (String room : schedule) {
-            subLoop: for (Hallway hall : allHalls) {
-                    if (hall.getRooms().contains(room)) {
-                        halls.add(hall);
-                        break subLoop;
-                    }
+            subLoop:
+            for (Hallway hall : allHalls) {
+                if (hall.getRooms().contains(room)) {
+                    halls.add(hall);
+                    break subLoop;
                 }
             }
+        }
         return halls;
     }
-    private String hallWayToRoom(List<String> schedule, Hallway hallway){
+        private Hallway roomToHall(String room){
+            for (Hallway hall : allHalls) {
+                if (hall.getRooms().contains(room)) {
+                    return hall;
+                }
+            }
+            return null;
+    }
+
+    private String hallWayToRoom(HashSet<String> schedule, Hallway hallway){
         for(String room: schedule){
             if(hallway.getRooms().contains(room)) return room;
         }
