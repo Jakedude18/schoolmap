@@ -8,6 +8,7 @@ public class Solver {
     private HashSet<Hallway> allHalls;
     private HashMap<Path, Integer> map;
     private HashSet<Path> allPaths;
+    private Hallway deadEndHall = new Hallway("Dead_end",new HashSet<>(),500);
     public Solver(HashMap map) {
         this.map = map;
     }
@@ -201,7 +202,7 @@ public class Solver {
         int value = 0;
         Hallway currentHall = startingHall;
         Hallway nextHall;
-         for(Path nextPath: paths){
+        for(Path nextPath: paths){
             nextHall = nextPath.otherPoint(currentHall);
             value += nextHall.getDistance();
             currentHall = nextHall;

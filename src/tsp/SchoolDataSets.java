@@ -38,13 +38,13 @@ public enum SchoolDataSets {
             addPath(LTHS_HALL_PATHS,LTHSHalls.HHALL.getHallway(),LTHSHalls.JHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.LEHALL.getHallway(),LTHSHalls.JHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.LSHALL.getHallway(),LTHSHalls.JHALL.getHallway());
-            addPath(LTHS_HALL_PATHS,LTHSHalls.LSHALL.getHallway(),LTHSHalls.JHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.LSHALL.getHallway(),LTHSHalls.LHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.LHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.JHALL.getHallway(),LTHSHalls.LHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.HHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.JHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.M6.getHallway());
+            addPath(LTHS_HALL_PATHS,LTHSHalls.KHALL.getHallway(),LTHSHalls.ARTHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.ARTHALL.getHallway(),LTHSHalls.M6.getHallway());
             //Anex Paths
             return LTHS_HALL_PATHS;
@@ -106,7 +106,9 @@ public enum SchoolDataSets {
                 B_ROOMS.add("B114");
                 B_ROOMS.add("B113");
                 B_ROOMS.add("B112");
+                B_ROOMS.add("B111");
                 B_ROOMS.add("B207");
+                B_ROOMS.add("B206");
                 B_ROOMS.add("B205");
                 B_ROOMS.add("B203");
                 B_ROOMS.add("B201");
