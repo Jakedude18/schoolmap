@@ -23,7 +23,7 @@ public class Solver {
         }
         System.out.println("This is the map: " + map);
     }
-    List<String> roomToRoomPath(String firstRoom,String secondRoom){
+    List<String> roomToRoomPath(String firstRoom,String secondRoom) throws RoomDoesNotExistException{
         List<String> easyToReadPath = new ArrayList<>();
         Hallway firtRoomHall = roomToHall(firstRoom);
         for(Hallway hall: easyToReadListPath(hallToHallPath(firtRoomHall,roomToHall(secondRoom),new HashSet<>()),firtRoomHall)){
@@ -239,13 +239,13 @@ public class Solver {
         }
         return halls;
     }
-        private Hallway roomToHall(String room){
+        private Hallway roomToHall(String room) throws RoomDoesNotExistException{
             for (Hallway hall : allHalls) {
                 if (hall.getRooms().contains(room)) {
                     return hall;
                 }
             }
-            return null;
+            throw new RoomDoesNotExistException(room);
     }
 
     private String hallWayToRoom(HashSet<String> schedule, Hallway hallway){
