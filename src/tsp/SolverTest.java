@@ -75,7 +75,7 @@ public class SolverTest {
         schedule.add("E102");
         schedule.add("D206");
         List<String> finalList = SchoolDataSets.LTHS.bestPath(schedule);
-        System.out.println(finalList);
-        //System.out.println(SchoolDataSets.LTHS.getSchoolData().roomToRoomPath("B206","G200"));
+        //System.out.println(finalList);
+        System.out.println(SchoolDataSets.LTHS.getSchoolData().roomToRoomPath("F201","M404"));
     }
 }
