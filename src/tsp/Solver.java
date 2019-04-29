@@ -7,7 +7,7 @@ public class Solver {
     private HashSet<Hallway> allHalls;
     private HashMap<Path, Integer> map;
     private HashSet<Path> allPaths;
-    private Hallway deadEndHall = new Hallway("Dead_end",new HashSet<>(), Integer.MAX_VALUE);
+    private Hallway deadEndHall = new Hallway("Dead_end",new HashSet<>(), 500);
     public Solver(HashMap map) {
         this.map = map;
     }
