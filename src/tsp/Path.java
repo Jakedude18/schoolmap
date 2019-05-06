@@ -30,7 +30,7 @@ public class Path<T> {
                 return (Hallway) point;
             }
         }
-        return null;
+        return notHallway;
     }
     public HashSet<T> getPoints() {
         HashSet<T> points = new HashSet<>();

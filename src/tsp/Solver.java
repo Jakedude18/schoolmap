@@ -25,31 +25,32 @@ public class Solver {
     }
     List<String> roomToRoomPath(String firstRoom,String secondRoom) throws RoomDoesNotExistException{
         List<String> easyToReadPath = new ArrayList<>();
-        Hallway firtRoomHall = roomToHall(firstRoom);
-        for(Hallway hall: easyToReadListPath(hallToHallPath(firtRoomHall,roomToHall(secondRoom),new HashSet<>()),firtRoomHall)){
+        Hallway firstRoomHall = roomToHall(firstRoom);
+        for(Hallway hall: easyToReadListPath(hallToHallPath(firstRoomHall,roomToHall(secondRoom),new HashSet<>()),firstRoomHall)){
             easyToReadPath.add(hall.getName());
         }
         return easyToReadPath;
     }
-    private HashMap<Path, Integer> generateMapUsingHalls(HashSet<String> roomSchedule) {
-        HashSet<Hallway> hallSchedule = scheduleToHallways(roomSchedule);
+    private HashMap<Path, Integer> generateMapUsingSchedule(HashSet<String> roomSchedule) throws RoomDoesNotExistException{
         HashMap<Path, Integer> TSPmap = new HashMap<>();
-        HashSet<Hallway> subSchedule = new HashSet(hallSchedule);
-        Iterator<Hallway> itr;
-        Hallway secondHall;
-        for (Hallway firstHall : hallSchedule) {
-            subSchedule.remove(firstHall);
+        HashSet<String> subSchedule = new HashSet<>(roomSchedule);
+        Iterator<String> itr;
+        String secondRoom;
+        Hallway firstHall;
+        for (String firstRoom : roomSchedule) {
+            firstHall = roomToHall(firstRoom);
+            subSchedule.remove(firstRoom);
             itr = subSchedule.iterator();
             while(itr.hasNext()){
-                secondHall = itr.next();
-                TSPmap.put(new Path(hallWayToRoom(roomSchedule,firstHall),hallWayToRoom(roomSchedule,secondHall)), pathListValue(hallToHallPath(firstHall, secondHall, new HashSet<>()), firstHall));
+                secondRoom = itr.next();
+                TSPmap.put(new Path(firstRoom,secondRoom), pathListValue(hallToHallPath(firstHall, roomToHall(secondRoom), new HashSet<>()),firstHall));
             }
         }
         return TSPmap;
     }
     //This function would be for if someone wanted to find the best possible path starting from any point on a map
-    List<String> bestPathStartingAnywhere(HashSet<String> schedule) throws NonHamiltonianTourPointsException {
-        map = generateMapUsingHalls(schedule);
+    List<String> bestPathStartingAnywhere(HashSet<String> schedule) throws NonHamiltonianTourPointsException, RoomDoesNotExistException {
+        map = generateMapUsingSchedule(schedule);
         allPaths = new HashSet(map.keySet());
         HashSet<String> allStartingPoints = new HashSet<>();
         Iterator<Path> pathsItr = map.keySet().iterator();
@@ -108,7 +109,6 @@ public class Solver {
             List<Path> deadEnd = new ArrayList<>();
             deadEnd.add(new Path(startingPosition, deadEndHall));
             return deadEnd;
-
         }
         for (Path path : nextPaths) {
             //checks to see if end hall is one of the next halls
@@ -215,19 +215,6 @@ public class Solver {
         return possiblePaths;
     }
 
-    private HashSet<Hallway> scheduleToHallways(HashSet<String> schedule) {
-        HashSet<Hallway> halls = new HashSet<>();
-        for (String room : schedule) {
-            subLoop:
-            for (Hallway hall : allHalls) {
-                if (hall.getRooms().contains(room)) {
-                    halls.add(hall);
-                    break subLoop;
-                }
-            }
-        }
-        return halls;
-    }
         private Hallway roomToHall(String room) throws RoomDoesNotExistException{
             for (Hallway hall : allHalls) {
                 if (hall.getRooms().contains(room)) {
@@ -235,12 +222,5 @@ public class Solver {
                 }
             }
             throw new RoomDoesNotExistException(room);
-    }
-
-    private String hallWayToRoom(HashSet<String> schedule, Hallway hallway){
-        for(String room: schedule){
-            if(hallway.getRooms().contains(room)) return room;
-        }
-        return null;
     }
 }

@@ -57,7 +57,7 @@ public class SolverTest {
     }
 
     @Test
-    public void LTHSMap() throws NonHamiltonianTourPointsException {
+    public void LTHSMap() throws NonHamiltonianTourPointsException, RoomDoesNotExistException {
         HashSet<String> schedule = new HashSet();
         //schedule.add("B401");
         schedule.add("E207");
@@ -71,11 +71,11 @@ public class SolverTest {
         HashSet<String> schedule = new HashSet();
         schedule.add("B207");
         schedule.add("K205");
-        schedule.add("C206");
-        schedule.add("E102");
-        schedule.add("D206");
+        schedule.add("B203");
+        //schedule.add("E102");
+        //schedule.add("D206");
         List<String> finalList = SchoolDataSets.LTHS.bestPath(schedule);
-        //System.out.println(finalList);
-        System.out.println(SchoolDataSets.LTHS.getSchoolData().roomToRoomPath("F201","M404"));
+        System.out.println(finalList);
+        //System.out.println(SchoolDataSets.LTHS.getSchoolData().roomToRoomPath("F201","M101"));
     }
 }

@@ -14,6 +14,13 @@ public enum SchoolDataSets {
 
         private static HashSet<Path> LTHSdata(){
             HashSet<Path> LTHS_HALL_PATHS = new HashSet<>();
+
+            //all paths connect to themselves
+            for(LTHSHalls hall:LTHSHalls.values()){
+                addPath(LTHS_HALL_PATHS,hall.getHallway(),hall.getHallway());
+            }
+
+            //other paths
             addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.CHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.LSHALL.getHallway());
             addPath(LTHS_HALL_PATHS,LTHSHalls.BHALL.getHallway(),LTHSHalls.DHALL.getHallway());
@@ -81,7 +88,7 @@ public enum SchoolDataSets {
             return halls;
         }
 
-        List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException{
+        List<String> bestPath(HashSet<String> schedule) throws NonHamiltonianTourPointsException, RoomDoesNotExistException{
             return this.schoolData.bestPathStartingAnywhere(schedule);
         }
 
@@ -106,7 +113,7 @@ public enum SchoolDataSets {
             M6("Link", M6_HAll(),100),
             M5("Annex Gym Hall", M5_HAll(),50),
             M4("Annex Science Hall", M4_HAll(),25),
-            M3("Breezeway M3 Hall", M3_HAll(),80),
+            M3("Breezeway/M3 Hall", M3_HAll(),80),
             M2("Annex History Hall", M2_HAll(),40),
             COURTYARD("Courtyard", COURTYARD(),50),
             BREEZWAY("Breezway", new HashSet<>(),30);
@@ -182,7 +189,7 @@ public enum SchoolDataSets {
                 E_ROOMS.add("E102");
                 E_ROOMS.add("E103");
                 E_ROOMS.add("E104");
-                E_ROOMS.add("E204");
+                E_ROOMS.add("E203");
                 E_ROOMS.add("E205");
                 E_ROOMS.add("E206");
                 E_ROOMS.add("E207");
